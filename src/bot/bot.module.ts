@@ -169,7 +169,7 @@ import { FindUserVoiceRoomCommand } from "./commands/findUserVoiceRoom/findUserV
 import { FindUserVoiceRoomService } from "./commands/findUserVoiceRoom/findUserVoiceRoom.service";
 import { TrudiSchedulerService } from "./scheduler/trudi-scheduler/trudi-scheduler.service";
 import { Dynamic } from "./models/dynamic.entity";
-import { DynamicSlashCommand } from "./slash-commands/slashcommand.slashcommand";
+import { DynamicSlashCommand } from "./slash-commands/dynamic.slashcommand";
 import { DynamicService } from "./commands/command/dynamic.service";
 // import { CronjobSlashCommand } from "./slash-commands/cronjob.slashcommand";
 
