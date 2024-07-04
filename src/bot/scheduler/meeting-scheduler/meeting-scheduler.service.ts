@@ -252,7 +252,7 @@ export class MeetingSchedulerService {
       try {
         onceFetchChannel = await client.channels.fetch(data.channelId);
       } catch (error) {
-        console.error('handleOnceMeeting: channel not found');
+        console.error("handleOnceMeeting: channel not found");
       }
       if (!onceFetchChannel) {
         return;
@@ -281,53 +281,50 @@ export class MeetingSchedulerService {
     dateScheduler,
     minuteDb
   ) {
-      if (this.utilsService.isSameDay()) return;
+    if (this.utilsService.isSameDay()) return;
     if (
       this.utilsService.isSameMinute(minuteDb, dateScheduler) &&
       this.utilsService.isTimeDay(dateScheduler)
     ) {
-        let dailyFetchChannel;
-        try {
-          dailyFetchChannel = await client.channels.fetch(data.channelId);
-        } catch (error) {
-          console.error('handleDailyMeeting: channel not found');
-        }
-        if (!dailyFetchChannel) {
-         return; 
-        }
-        await this.handleRenameVoiceChannel(
-          roomVoice,
-          dailyFetchChannel,
-          client,
-          data
-        );
+      let dailyFetchChannel;
+      try {
+        dailyFetchChannel = await client.channels.fetch(data.channelId);
+      } catch (error) {
+        console.error("handleDailyMeeting: channel not found");
+      }
+      if (!dailyFetchChannel) {
+        return;
+      }
+      await this.handleRenameVoiceChannel(
+        roomVoice,
+        dailyFetchChannel,
+        client,
+        data
+      );
       let newCreatedTimestamp = data.createdTimestamp;
       newCreatedTimestamp = currentDate.setDate(currentDate.getDate() + 1);
 
       while (await this.utilsService.checkHolidayMeeting(currentDate)) {
         newCreatedTimestamp = currentDate.setDate(currentDate.getDate() + 1);
-
-        while (await this.utilsService.checkHolidayMeeting(currentDate)) {
-          newCreatedTimestamp = currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        await this.meetingRepository
-          .createQueryBuilder()
-          .update(Meeting)
-          .set({ reminder: true, createdTimestamp: newCreatedTimestamp })
-          .where('"id" = :id', { id: data.id })
-          .execute()
-          .catch(console.error);
-
-        const findMeetingAfter = await this.meetingRepository.find({
-          where: {
-            channelId: data.channelId,
-            task: data.task,
-            repeat: data.repeat,
-          },
-        });
-        console.log(findMeetingAfter, "findMeetingAfterUpdate");
       }
+
+      await this.meetingRepository
+        .createQueryBuilder()
+        .update(Meeting)
+        .set({ reminder: true, createdTimestamp: newCreatedTimestamp })
+        .where('"id" = :id', { id: data.id })
+        .execute()
+        .catch(console.error);
+
+      const findMeetingAfter = await this.meetingRepository.find({
+        where: {
+          channelId: data.channelId,
+          task: data.task,
+          repeat: data.repeat,
+        },
+      });
+      console.log(findMeetingAfter, "findMeetingAfterUpdate");
+    }
   }
 
   async handleWeeklyMeeting(
@@ -347,7 +344,7 @@ export class MeetingSchedulerService {
       try {
         weeklyFetchChannel = await client.channels.fetch(data.channelId);
       } catch (error) {
-        console.log('handleWeeklyMeeting: channel not found');
+        console.log("handleWeeklyMeeting: channel not found");
       }
       if (!weeklyFetchChannel) {
         return;
@@ -395,7 +392,7 @@ export class MeetingSchedulerService {
       try {
         repeatFetchChannel = await client.channels.fetch(data.channelId);
       } catch (error) {
-        console.error('handleRepeatMeeting: channel not found');
+        console.error("handleRepeatMeeting: channel not found");
       }
       if (!repeatFetchChannel) {
         return;
@@ -461,7 +458,7 @@ export class MeetingSchedulerService {
         try {
           monthlyFetchChannel = await client.channels.fetch(data.channelId);
         } catch (error) {
-          console.error('handleMonthlyMeeting: channel not found');
+          console.error("handleMonthlyMeeting: channel not found");
         }
         if (!monthlyFetchChannel) {
           return;
@@ -486,9 +483,10 @@ export class MeetingSchedulerService {
   }
 
   async handleRenameVoiceChannel(roomVoice, channel, client, data) {
-    if(data.task.includes("https")) {
-      await channel.send(`@here our meeting room is ${data.task}`)
-      .catch(console.error);
+    if (data.task.includes("https")) {
+      await channel
+        .send(`@here our meeting room is ${data.task}`)
+        .catch(console.error);
       return;
     }
     if (roomVoice.length !== 0) {

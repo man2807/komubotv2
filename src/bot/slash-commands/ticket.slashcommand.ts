@@ -12,13 +12,8 @@ import { firstValueFrom } from "rxjs";
 import { ClientConfigService } from "../config/client-config.service";
 import { TicketDevDto } from "../slash-commands/dto/ticketdev.dto";
 import { SlashCommandPipe } from "@discord-nestjs/common";
-import { CommandSlash } from "../base/slashCommand.base";
 
 @Command({
-  name: "ticketdev",
-  description: "manage ticket",
-})
-@CommandSlash({
   name: "ticketdev",
   description: "manage ticket",
 })

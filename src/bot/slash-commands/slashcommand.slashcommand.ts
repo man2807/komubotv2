@@ -9,16 +9,11 @@ import { ClientEvents, InteractionReplyOptions } from "discord.js";
 import { Repository } from "typeorm";
 import { SlashCommandPipe } from "@discord-nestjs/common";
 import { Dynamic } from "../models/dynamic.entity";
-import { CommandSlash } from "../base/slashCommand.base";
 import { DynamicDto } from "./dto/dynamic.dto";
 
 @Command({
   name: "register",
-  description: "Create command emoji",
-})
-@CommandSlash({
-  name: "register",
-  description: "Create command emoji",
+  description: "Create dynamic command",
 })
 export class DynamicSlashCommand {
   constructor(

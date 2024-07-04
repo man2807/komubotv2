@@ -10,13 +10,8 @@ import { Repository } from "typeorm";
 import { KeepDto } from "./dto/keep.dto";
 import { Keep } from "../models/keep.entity";
 import { SlashCommandPipe } from "@discord-nestjs/common";
-import { CommandSlash } from "../base/slashCommand.base";
 
 @Command({
-  name: "keep",
-  description: "manage yourself note",
-})
-@CommandSlash({
   name: "keep",
   description: "manage yourself note",
 })

@@ -1,8 +1,7 @@
 import { DiscoveryService } from "@nestjs/core";
-import { Client, EmbedBuilder, Message } from "discord.js";
+import { Client, EmbedBuilder, Message,  } from "discord.js";
 import { CommandLine, CommandLineClass } from "src/bot/base/command.base";
 import {
-  DECORATOR_COMMAND,
   DECORATOR_COMMAND_LINE,
 } from "src/bot/base/command.constans";
 import { ExtendersService } from "src/bot/utils/extenders/extenders.service";
@@ -10,6 +9,7 @@ import { resolveCategory } from "src/bot/utils/function";
 import { Logger } from "@nestjs/common";
 import { ClientConfigService } from "src/bot/config/client-config.service";
 import { DynamicService } from "../command/dynamic.service";
+import { COMMAND_DECORATOR } from "@discord-nestjs/core";
 
 @CommandLine({
   name: "help",
@@ -56,18 +56,18 @@ export class HelpCommand implements CommandLineClass {
         if (typeof provider !== "string") {
           const instance = provider.instance;
           if (!instance || typeof instance === "string") return;
-          if (!Reflect.getMetadata(DECORATOR_COMMAND, instance)) return;
+          if (!Reflect.getMetadata(COMMAND_DECORATOR, instance)) return;
           if (
-            !Reflect.getMetadata(DECORATOR_COMMAND, instance)?.name ||
-            !Reflect.getMetadata(DECORATOR_COMMAND, instance)?.description
+            !Reflect.getMetadata(COMMAND_DECORATOR, instance)?.name ||
+            !Reflect.getMetadata(COMMAND_DECORATOR, instance)?.description
           ) {
             this.logger.error(
               "please make property name and description in decorator @Command"
             );
           }
           commands.push({
-            name: Reflect.getMetadata(DECORATOR_COMMAND, instance)?.name,
-            description: Reflect.getMetadata(DECORATOR_COMMAND, instance)
+            name: Reflect.getMetadata(COMMAND_DECORATOR, instance)?.name,
+            description: Reflect.getMetadata(COMMAND_DECORATOR, instance)
               ?.description,
           });
         }
