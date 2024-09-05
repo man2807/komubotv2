@@ -176,11 +176,11 @@ export class KomubotrestService {
       }
       if (!user) {
         // notify to machleo channel
-        const message = `<@${this.clientConfig.komubotrestAdminId}> ơi, đồng chí ${username} không đúng format rồi!!!`;
-        await (client.channels.cache as any)
-          .get(this.clientConfig.machleoChannelId)
-          .send(message)
-          .catch(console.error);
+        // const message = `<@${this.clientConfig.komubotrestAdminId}> ơi, đồng chí ${username} không đúng format rồi!!!`;
+        // await (client.channels.cache as any)
+        //   .get(this.clientConfig.machleoChannelId)
+        //   .send(message)
+        //   .catch(console.error);
         return null;
       }
       const sent = await user.send(msg);
