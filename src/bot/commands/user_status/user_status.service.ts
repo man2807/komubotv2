@@ -13,8 +13,7 @@ export class UserStatusService {
   async getUserStatus(email) {
     return await this.userRepository
       .createQueryBuilder()
-      .where(`"email" = :email`, { email: email })
-      .orWhere(`"username" = :username`, { username: email })
+      .where(`("email" = :email or "username" = :username)`, { email: email, username: email })
       .andWhere('user_type is null')
       .select("*")
       .execute();

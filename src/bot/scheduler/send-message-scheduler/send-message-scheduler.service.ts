@@ -199,10 +199,8 @@ export class SendMessageSchedulerService {
       userListNotCheckIn.map(async (user) => {
         const checkUser = await this.userRepository
           .createQueryBuilder()
-          .where("email = :email", {
+          .where("(email = :email or username = :username)", {
             email: user.komuUserName,
-          })
-          .orWhere("username = :username", {
             username: user.komuUserName,
           })
           .andWhere(

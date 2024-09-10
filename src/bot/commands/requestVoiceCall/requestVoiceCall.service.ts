@@ -19,8 +19,7 @@ export class RequestVoiceCallService {
   async getDataUser(email) {
     return await this.userRepository
       .createQueryBuilder()
-      .where(`"email" = :email`, { email: email })
-      .orWhere(`"username" = :username`, { username: email })
+      .where(`("email" = :email or "username" = :username)`, { email: email, username: email })
       .andWhere('user_type is null')
       .select("*")
       .getRawOne();

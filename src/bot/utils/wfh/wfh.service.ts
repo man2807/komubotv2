@@ -181,10 +181,8 @@ export class WfhService {
 
         const pmdb = await this.userRepository
           .createQueryBuilder()
-          .where(`"username" = :username`, {
+          .where(`("username" = :username or "email" = :email)`, {
             username: response.data.result.projectDtos[0].pmUsername,
-          })
-          .orWhere(`"email" = :email`, {
             email: response.data.result.projectDtos[0].pmUsername,
           })
           .andWhere(`"deactive" IS NOT true and user_type is null`)

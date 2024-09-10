@@ -221,10 +221,8 @@ export class UserNotDailyService {
           notDaily.map((user) =>
             this.userRepository
               .createQueryBuilder('user')
-              .where(`LOWER("email") = :email`, {
+              .where(`(LOWER("email") = :email or LOWER("username") = :username)`, {
                 email: user.email.toLowerCase(),
-              })
-              .orWhere(`LOWER("username") = :username`, {
                 username: user.email.toLowerCase(),
               })
               .andWhere('("createdAt" < :today OR "createdAt" is NULL)', {
