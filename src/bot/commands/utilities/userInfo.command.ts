@@ -50,7 +50,7 @@ export class UserInfoCommand implements CommandLineClass {
     const findUser = await this.userRepository
       .createQueryBuilder()
       .where(`"userId" = :userId`, { userId: member.user.id })
-      .andWhere(`"deactive" IS NOT true`)
+      .andWhere(`"deactive" IS NOT true and user_type is null`)
       .select("*")
       .getRawOne();
 

@@ -42,7 +42,7 @@ export class TimeSheetCommand implements CommandLineClass {
     const findUser = await this.userRepository
       .createQueryBuilder()
       .where(`"userId" = :userId`, { userId: message.author.id })
-      .andWhere(`"deactive" IS NOT true`)
+      .andWhere(`"deactive" IS NOT true and user_type is null`)
       .select("*")
       .getRawOne();
     const username = findUser.email;

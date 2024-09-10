@@ -145,7 +145,7 @@ export class DatingSchedulerService {
             listJoinCall: listJoinCall,
           }
         )
-        .andWhere(`"deactive" IS NOT TRUE`)
+        .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
         .select("users.*")
         .execute();
 
@@ -173,7 +173,7 @@ export class DatingSchedulerService {
             listJoinCall: listJoinCall,
           }
         )
-        .andWhere(`"deactive" IS NOT TRUE`)
+        .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
         .select("users.*")
         .execute();
 

@@ -23,7 +23,7 @@ export class ReportScoreService {
 
       const scoresQuizData = await this.userRepository
         .createQueryBuilder()
-        .andWhere(`"deactive" IS NOT TRUE`)
+        .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
         .orderBy(`"scores_quiz"`, "DESC")
         .limit(10)
         .select("*")

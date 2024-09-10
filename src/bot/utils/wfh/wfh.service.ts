@@ -187,7 +187,7 @@ export class WfhService {
           .orWhere(`"email" = :email`, {
             email: response.data.result.projectDtos[0].pmUsername,
           })
-          .andWhere(`"deactive" IS NOT true`)
+          .andWhere(`"deactive" IS NOT true and user_type is null`)
           .select("*")
           .getRawOne();
 

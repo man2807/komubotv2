@@ -116,6 +116,9 @@ export class User {
   @Column({ default: 0, nullable: true })
   not_workout: number;
 
+  @Column({ type: "varchar", nullable: true })
+  user_type: string;
+
   @Column({ type: "numeric", nullable: true })
   createdAt: number;
 }

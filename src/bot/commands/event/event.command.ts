@@ -221,8 +221,7 @@ export class EventCommand implements CommandLineClass {
     async getDataUser(email) {
         return await this.userRepository
             .createQueryBuilder()
-            .where(`"email" = :email`, { email: email })
-            .orWhere(`"username" = :username`, { username: email })
+            .where(`("email" = :email or "username" = :username) and user_type is null`, { email, username: email })
             .select("*")
             .getRawOne();
     }

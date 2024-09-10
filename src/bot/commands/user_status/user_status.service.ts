@@ -15,6 +15,7 @@ export class UserStatusService {
       .createQueryBuilder()
       .where(`"email" = :email`, { email: email })
       .orWhere(`"username" = :username`, { username: email })
+      .andWhere('user_type is null')
       .select("*")
       .execute();
   }

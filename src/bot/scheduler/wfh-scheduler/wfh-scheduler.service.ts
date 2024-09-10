@@ -134,7 +134,7 @@ export class WfhSchedulerService {
             useridJoining: useridJoining,
           }
         )
-        .andWhere('"deactive" IS NOT True')
+        .andWhere('"deactive" IS NOT True and user_type is null')
         .andWhere('("roles_discord" @> :intern OR "roles_discord" @> :staff)', {
           intern: ["INTERN"],
           staff: ["STAFF"],
@@ -245,7 +245,7 @@ export class WfhSchedulerService {
             wfhUserEmail: wfhUserEmail,
           }
         )
-        .andWhere('"deactive" IS NOT True')
+        .andWhere('"deactive" IS NOT True and user_type is null')
         .andWhere('"roles_discord" IS Not Null')
         .andWhere('"botPing" = :botPing', {
           botPing: true,

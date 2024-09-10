@@ -130,7 +130,7 @@ export class DailyCommand implements CommandLineClass {
       const authorId = message.author.id;
       const findUser = await this.userRepository
         .createQueryBuilder()
-        .where(`"userId" = :userId`, { userId: message.author.id })
+        .where(`"userId" = :userId and user_type is null`, { userId: message.author.id })
         .andWhere(`"deactive" IS NOT true`)
         .select("*")
         .getRawOne();

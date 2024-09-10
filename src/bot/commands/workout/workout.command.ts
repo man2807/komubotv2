@@ -127,7 +127,7 @@ export class WorkoutCommand implements CommandLineClass {
           const checkRole = await this.userRepository
             .createQueryBuilder("user")
             .where('"userId" = :userId', { userId: authorId })
-            .andWhere('"deactive" IS NOT True')
+            .andWhere('"deactive" IS NOT True and user_type is null')
             .andWhere('("roles_discord" @> :hr)', {
               hr: ["HR"],
             })
@@ -263,7 +263,7 @@ export class WorkoutCommand implements CommandLineClass {
               const checkRole = await this.userRepository
                 .createQueryBuilder("user")
                 .where('"userId" = :userId', { userId: i.user })
-                .andWhere('"deactive" IS NOT True')
+                .andWhere('"deactive" IS NOT True and user_type is null')
                 .andWhere('("roles_discord" @> :hr)', {
                   hr: ["HR"],
                 })

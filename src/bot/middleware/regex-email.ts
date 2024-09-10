@@ -23,7 +23,7 @@ export class RegexEmailPipe implements PipeTransform {
     }
     const users = await this.userRepository
       .createQueryBuilder("user")
-      .where('"email" IN (:...emails)', { emails })
+      .where('"email" IN (:...emails) and user_type is null', { emails })
       .select("*")
       .getRawMany();
 

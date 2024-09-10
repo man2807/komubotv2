@@ -58,7 +58,7 @@ export class ReportCheckCameraService {
           userOff: userOff,
         }
       )
-      .andWhere('"deactive" IS NOT True')
+      .andWhere('"deactive" IS NOT True and user_type is null')
       .andWhere(
         "NOT roles_discord @> array['CLIENT'] AND NOT roles_discord @> array['HR'] AND NOT roles_discord @> array['ADMIN']"
       )

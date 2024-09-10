@@ -14,7 +14,7 @@ export class WomanDayService {
     return await this.userRepository
       .createQueryBuilder()
       .where(`"email" IN (:emails)`, { emails: userWomenTest })
-      .andWhere(`"deactive" IS NOT TRUE `)
+      .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
       .execute();
   }
 }

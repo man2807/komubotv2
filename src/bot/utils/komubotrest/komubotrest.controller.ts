@@ -359,4 +359,16 @@ export class KomubotrestController {
   async getListInfoUser(@Body() getListInfoUser: GetListInfoUserDto) {
     return await this.komubotrestService.getListInfoUser(getListInfoUser);
   }
+
+  @Post("/migrateUserType")
+  async migrateUserType(
+    @Headers("X-Secret-Key") header,
+    @Res() res: Response
+  ) {
+    this.komubotrestService.migrateUserType(
+      this.client,
+      header
+    );
+    res.status(200).send({ message: 'migrating...' });
+  }
 }

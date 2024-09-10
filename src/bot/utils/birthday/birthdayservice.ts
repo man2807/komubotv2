@@ -76,7 +76,7 @@ export class BirthdayService {
           .where('"email" = :email', {
             email: item.email.slice(0, -9),
           })
-          .andWhere('"deactive" IS NOT True')
+          .andWhere('"deactive" IS NOT True and user_type is null')
           .select("users.*")
           .execute();
         const resultBirthday = await this.birthdayRepository.find();

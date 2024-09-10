@@ -159,7 +159,7 @@ export class SendMessageSchedulerService {
         .where(`"email" = :email`, {
           email: list,
         })
-        .andWhere(`"deactive" IS NOT TRUE`)
+        .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
         .andWhere(`"roles_discord" IS NOT NUll`)
         .select("*")
         .execute();
@@ -213,7 +213,7 @@ export class SendMessageSchedulerService {
               userOffFullday: userOffFullday,
             }
           )
-          .andWhere(`"deactive" IS NOT TRUE`)
+          .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
           .select("*")
           .getRawOne();
         if (checkUser && checkUser !== null) {

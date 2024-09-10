@@ -108,7 +108,7 @@ export class UserNotDailyService {
           intern: ["INTERN"],
           staff: ["STAFF"],
         })
-        .andWhere(`"deactive" IS NOT TRUE`)
+        .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
         .select("*")
         .execute();
 
@@ -230,7 +230,7 @@ export class UserNotDailyService {
               .andWhere('("createdAt" < :today OR "createdAt" is NULL)', {
                 today: Date.now() - dayToMilliseconds,
               })
-              .andWhere(`"deactive" IS NOT TRUE`)
+              .andWhere(`"deactive" IS NOT TRUE and user_type is null`)
               .select("*")
               .getRawOne()
           )

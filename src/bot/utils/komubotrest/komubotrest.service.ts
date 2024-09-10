@@ -27,7 +27,7 @@ import { Channel } from "src/bot/models/channel.entity";
 import { Msg } from "src/bot/models/msg.entity";
 import { User } from "src/bot/models/user.entity";
 import { WorkFromHome } from "src/bot/models/wfh.entity";
-import { Brackets, In, Repository } from "typeorm";
+import { Brackets, In, IsNull, Repository } from "typeorm";
 import { Daily } from "src/bot/models/daily.entity";
 import { UtilsService } from "../utils.service";
 import { Uploadfile } from "src/bot/models/uploadFile.entity";
@@ -60,14 +60,14 @@ export class KomubotrestService {
       .createQueryBuilder()
       .where(
         new Brackets((qb) => {
-          qb.where(`"email" = :email`, {
+          qb.where(`"email" = :email and user_type is null`, {
             email: _pramams,
           }).andWhere(`"deactive" IS NOT true`);
         })
       )
       .orWhere(
         new Brackets((qb) => {
-          qb.where(`"username" = :username`, {
+          qb.where(`"username" = :username and user_type is null`, {
             username: _pramams,
           }).andWhere(`"deactive" IS NOT true`);
         })
@@ -158,10 +158,10 @@ export class KomubotrestService {
     try {
       const userdb = await this.userRepository
         .createQueryBuilder()
-        .where('"email" = :username and deactive IS NOT True ', {
+        .where('"email" = :username and deactive IS NOT True and user_type is null', {
           username: username,
         })
-        .orWhere('"username" = :username and deactive IS NOT True ', {
+        .orWhere('"username" = :username and deactive IS NOT True and user_type is null', {
           username: username,
         })
         .select("*")
@@ -229,10 +229,10 @@ export class KomubotrestService {
       console.log("error", error);
       const userDb = await this.userRepository
         .createQueryBuilder()
-        .where('"email" = :username and deactive IS NOT True ', {
+        .where('"email" = :username and deactive IS NOT True and user_type is null', {
           username: username,
         })
-        .orWhere('"username" = :username and deactive IS NOT True ', {
+        .orWhere('"username" = :username and deactive IS NOT True and user_type is null', {
           username: username,
         })
         .select("*")
@@ -766,6 +766,7 @@ export class KomubotrestService {
     return await this.userRepository.find({
       where: {
         email: getUserIdByEmailDTO.email,
+        user_type: IsNull()
       },
     });
   }
@@ -1024,6 +1025,7 @@ export class KomubotrestService {
       select: ["userId", "email"],
       where: {
         email: In(emails),
+        user_type: IsNull(),
         deactive: false,
       },
     });
@@ -1061,6 +1063,7 @@ export class KomubotrestService {
       select: ["userId"],
       where: {
         email: email,
+        user_type: IsNull(),
         deactive: false,
       },
     });
@@ -1068,5 +1071,37 @@ export class KomubotrestService {
       return null;
     }
     return user.userId;
+  }
+
+  async migrateUserType(client, header): Promise<void> {
+    if (!header || header !== this.clientConfig.komubotRestSecretKey) {
+      return;
+    }
+
+    const subQuery = this.userRepository.createQueryBuilder()
+      .select("username")
+      .where("user_type IS NULL")
+      .groupBy("username")
+      .having("COUNT(*) > 1")
+      .getQuery();
+
+    console.log(subQuery);
+
+    const users = await this.userRepository.createQueryBuilder()
+      .where(`username IN (${subQuery})`)
+      .getMany();
+
+    const mezonUsers: User[] = [];
+
+    for (const user of users) {
+      try {
+        const author = await client.users.fetch(user.userId);
+      } catch (err) {
+        console.log(user.username);
+        mezonUsers.push(user);
+      }
+    }
+
+    await this.userRepository.update({ userId: In(mezonUsers.map(user => user.userId)) }, { user_type: 'MEZON' });
   }
 }

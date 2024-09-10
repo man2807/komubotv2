@@ -54,7 +54,7 @@ export class PenaltyService {
           else qb.where(`"username" = :username`, { username: param });
         })
       )
-      .andWhere(`"deactive" IS NOT true`)
+      .andWhere(`"deactive" IS NOT true and user_type is null`)
       .select("*")
       .execute();
   }
@@ -62,7 +62,7 @@ export class PenaltyService {
     return await this.userRepository
       .createQueryBuilder()
       .where(`"userId" = :userId`, { userId: _userId })
-      .andWhere(`"deactive" IS NOT true`)
+      .andWhere(`"deactive" IS NOT true and user_type is null`)
       .select("*")
       .execute();
   }
@@ -70,7 +70,7 @@ export class PenaltyService {
     return await this.userRepository
       .createQueryBuilder()
       .where(`"username" =:username`, { username: _username })
-      .andWhere(`"deactive" IS NOT true`)
+      .andWhere(`"deactive" IS NOT true and user_type is null`)
       .select("*")
       .execute();
   }
