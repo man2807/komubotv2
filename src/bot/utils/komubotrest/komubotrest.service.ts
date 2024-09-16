@@ -1094,6 +1094,7 @@ export class KomubotrestService {
     for (const user of users) {
       try {
         const author = await client.users.fetch(user.userId);
+        console.log('author', author, author.username)
       } catch (err) {
         console.log('user.name', user.username);
         mezonUsers.push(user);
