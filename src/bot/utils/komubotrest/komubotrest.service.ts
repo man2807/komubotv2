@@ -1090,11 +1090,12 @@ export class KomubotrestService {
       .getMany();
 
     const mezonUsers: User[] = [];
+    const guild = await client.guilds.fetch(this.clientConfig.guild_komu_id);
 
     for (const user of users) {
       try {
-        const author = await client.users.fetch(user.userId);
-        console.log('author', author, author.username)
+        const author = await guild.members.fetch(user.userId);
+        console.log('author', author, author.displayName)
       } catch (err) {
         console.log('user.name', user.username);
         mezonUsers.push(user);
