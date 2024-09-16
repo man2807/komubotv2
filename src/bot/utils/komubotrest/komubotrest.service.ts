@@ -1079,16 +1079,14 @@ export class KomubotrestService {
     }
 
     const subQuery = this.userRepository.createQueryBuilder()
-      .select("username")
+      .select("email")
       .where("user_type IS NULL")
-      .groupBy("username")
+      .groupBy("email")
       .having("COUNT(*) > 1")
       .getQuery();
 
-    console.log(subQuery);
-
     const users = await this.userRepository.createQueryBuilder()
-      .where(`username IN (${subQuery})`)
+      .where(`email IN (${subQuery})`)
       .getMany();
 
     const mezonUsers: User[] = [];
@@ -1097,11 +1095,12 @@ export class KomubotrestService {
       try {
         const author = await client.users.fetch(user.userId);
       } catch (err) {
-        console.log(user.username);
+        console.log('user.name', user.username);
         mezonUsers.push(user);
       }
     }
 
     await this.userRepository.update({ userId: In(mezonUsers.map(user => user.userId)) }, { user_type: 'MEZON' });
+    console.log('migrateUserType done!')
   }
 }
