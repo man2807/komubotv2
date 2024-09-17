@@ -158,12 +158,18 @@ export class KomubotrestService {
     try {
       const userdb = await this.userRepository
         .createQueryBuilder()
-        .where('"email" = :username and deactive IS NOT True and user_type is null', {
-          username: username,
-        })
-        .orWhere('"username" = :username and deactive IS NOT True and user_type is null', {
-          username: username,
-        })
+        .where(
+          '"email" = :username and deactive IS NOT True and user_type is null',
+          {
+            username: username,
+          }
+        )
+        .orWhere(
+          '"username" = :username and deactive IS NOT True and user_type is null',
+          {
+            username: username,
+          }
+        )
         .select("*")
         .getRawOne()
         .catch(console.error);
@@ -229,12 +235,18 @@ export class KomubotrestService {
       console.log("error", error);
       const userDb = await this.userRepository
         .createQueryBuilder()
-        .where('"email" = :username and deactive IS NOT True and user_type is null', {
-          username: username,
-        })
-        .orWhere('"username" = :username and deactive IS NOT True and user_type is null', {
-          username: username,
-        })
+        .where(
+          '"email" = :username and deactive IS NOT True and user_type is null',
+          {
+            username: username,
+          }
+        )
+        .orWhere(
+          '"username" = :username and deactive IS NOT True and user_type is null',
+          {
+            username: username,
+          }
+        )
         .select("*")
         .getRawOne()
         .catch(console.error);
@@ -549,7 +561,11 @@ export class KomubotrestService {
       console.log("User not found in DB!", sendMessageToChannelDTO.username);
       // sendMessageToChannelDTO.message += `<@${this.clientConfig.komubotrestAdminId}> ơi, đồng chí ${sendMessageToChannelDTO.username} không đúng format rồi!!!`;
       userid = sendMessageToChannelDTO.username as any;
-      res.status(400).send({ message: `User ${sendMessageToChannelDTO.username} not found in DB!` });
+      res
+        .status(400)
+        .send({
+          message: `User ${sendMessageToChannelDTO.username} not found in DB!`,
+        });
       return;
     } else {
       sendMessageToChannelDTO.machleo_userid = userdb.userId;
@@ -766,7 +782,7 @@ export class KomubotrestService {
     return await this.userRepository.find({
       where: {
         email: getUserIdByEmailDTO.email,
-        user_type: IsNull()
+        user_type: IsNull(),
       },
     });
   }
@@ -1078,14 +1094,16 @@ export class KomubotrestService {
       return;
     }
 
-    const subQuery = this.userRepository.createQueryBuilder()
+    const subQuery = this.userRepository
+      .createQueryBuilder()
       .select("email")
       .where("user_type IS NULL")
       .groupBy("email")
       .having("COUNT(*) > 1")
       .getQuery();
 
-    const users = await this.userRepository.createQueryBuilder()
+    const users = await this.userRepository
+      .createQueryBuilder()
       .where(`email IN (${subQuery})`)
       .getMany();
 
@@ -1095,14 +1113,29 @@ export class KomubotrestService {
     for (const user of users) {
       try {
         const author = await guild.members.fetch(user.userId);
-        console.log('author', author, author.displayName)
+        console.log("author", author, author.displayName);
       } catch (err) {
-        console.log('user.name', user.username);
+        console.log("user.name", user.username);
         mezonUsers.push(user);
       }
     }
 
-    await this.userRepository.update({ userId: In(mezonUsers.map(user => user.userId)) }, { user_type: 'MEZON' });
-    console.log('migrateUserType done!')
+    await this.userRepository.update(
+      { userId: In(mezonUsers.map((user) => user.userId)) },
+      { user_type: "MEZON" }
+    );
+    console.log("migrateUserType done!");
+  }
+
+  async getNcc8Episode(episode: string) {
+    const file = await this.uploadFileData
+      .createQueryBuilder()
+      .where('"episode" = :episode', { episode })
+      .orderBy('"createTimestamp"', "DESC")
+      .limit(1)
+      .select("*")
+      .execute();
+    
+    return file;
   }
 }
