@@ -375,15 +375,11 @@ export class KomubotrestController {
 
   @Get("/ncc8/episode/:episode")
   async getNcc8Episode(
-    @Headers("X-Secret-Key") header,
     @Param('episode') episode: string,
-    @Res({ passthrough: true }) res: Response
+    // @Res({ passthrough: true }) res: Response
+    @Res() res: Response
   ) {
     try {
-      if (!header || header !== this.clientConfigService.komubotRestSecretKey) {
-        res.status(403).send({ message: "Missing secret key!" });
-        return;
-      }
       const file = await this.komubotrestService.getNcc8Episode(episode);
       if (!file?.length) {
         res.status(404).send({ message: 'Not found' });
@@ -391,10 +387,11 @@ export class KomubotrestController {
       }
 
       const nccPath = join(__dirname, "../../../..", "uploads/");
+
+      res.status(200).json({ url: join(nccPath + file[0].fileName) })
   
       // const mp3 = createReadStream(join(nccPath + file[0].fileName));
   
-      res.sendFile(join(nccPath + file[0].fileName))
       // res.set({
       //   "Content-Type": "audio/mp3",
       //   "Content-Disposition": `attachment; filename=${file[0].fileName}`,
