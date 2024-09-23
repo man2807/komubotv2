@@ -31,4 +31,7 @@ export class UserQuiz {
 
   @Column({ nullable: true, type: "decimal" })
   updateAt: number;
+
+  @Column({ type: 'text', nullable: true })
+  message_id: string;
 }
