@@ -127,4 +127,7 @@ export class User {
 
   @Column({ type: "numeric", nullable: true })
   createdAt: number;
+
+  @Column({ type: 'numeric', nullable: true })
+  last_message_time: number;
 }
