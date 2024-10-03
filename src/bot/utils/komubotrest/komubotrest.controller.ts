@@ -46,6 +46,7 @@ import { ApiTags } from "@nestjs/swagger";
 import { UserNotDailyService } from "../getUserNotDaily/getUserNotDaily.service";
 import { parse } from "date-fns";
 import { ReportWFHService } from "../reportWFH/report-wfh.service";
+import { FileType } from "src/bot/constants/enum";
 
 @ApiTags("Komu")
 @Controller()
@@ -258,7 +259,7 @@ export class KomubotrestController {
       fileName: `${file.filename}`,
       createTimestamp: Date.now(),
       episode,
-      file_type: "ncc8"
+      file_type: FileType.NCC8,
     });
     try {
       const oauth2Client = new google.auth.OAuth2(
@@ -381,7 +382,7 @@ export class KomubotrestController {
     @Res() res: Response
   ) {
     try {
-      const file = await this.komubotrestService.getNcc8Episode(episode,'ncc8');
+      const file = await this.komubotrestService.getNcc8Episode(episode, FileType.NCC8);
       if (!file?.length) {
         res.status(404).send({ message: 'Not found' });
         return;
@@ -410,7 +411,7 @@ export class KomubotrestController {
     @Res() res: Response
   ) {
     try {
-      const file = await this.komubotrestService.getNcc8Episode(episode,'film');
+      const file = await this.komubotrestService.getNcc8Episode(episode, FileType.FILM);
       if (!file?.length) {
         res.status(404).send({ message: 'Not found' });
         return;

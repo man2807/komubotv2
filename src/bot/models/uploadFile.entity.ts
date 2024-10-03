@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 import { TABLE } from "../constants/table";
+import { FileType } from "../constants/enum";
 
 @Entity(TABLE.UPLOADFILE)
 export class Uploadfile {
@@ -20,5 +21,5 @@ export class Uploadfile {
   episode: number;
 
   @Column({ type: "varchar", nullable: true })
-  file_type: string;
+  file_type: FileType;
 }

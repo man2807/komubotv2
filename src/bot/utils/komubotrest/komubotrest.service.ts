@@ -35,7 +35,7 @@ import { ReportDailyDTO } from "./komubotrest.dto";
 import { join } from "path";
 import moment from "moment";
 import * as fs from "fs";
-import * as path from "path";
+import { FileType } from "src/bot/constants/enum";
 
 @Injectable()
 export class KomubotrestService {
@@ -1145,10 +1145,11 @@ export class KomubotrestService {
     return file;
   }
 
-  async findMaxEpisode(): Promise<number> {
+  async findMaxEpisodeFilm(): Promise<number> {
     const result = await this.uploadFileData
       .createQueryBuilder("upload_file")
       .select("MAX(upload_file.episode)", "maxEpisode")
+      .where("upload_file.file_type = :fileType", { fileType: FileType.FILM })
       .getRawOne();
     return result?.maxEpisode || 0;
   }
@@ -1158,7 +1159,7 @@ export class KomubotrestService {
       if (filename) {
         if (eventType === "rename") {
           console.log(`Event type: ${eventType}`);
-          const filePath = path.join(this.folderPath, filename);
+          const filePath = join(this.folderPath, filename);
           fs.stat(filePath, async (err, stats) => {
             if (err) {
               console.log(`${filename} was deleted.`);
@@ -1169,13 +1170,13 @@ export class KomubotrestService {
               console.log("New film inserted: ", filename);
               const isNewFilm = filename.startsWith("film_");
               if (!isNewFilm) return;
-              const episode = await this.findMaxEpisode(); // find current episode
+              const episode = await this.findMaxEpisodeFilm(); // find current episode film
               await this.uploadFileData.insert({
                 filePath: this.folderPath,
                 fileName: `${filename}`,
                 createTimestamp: Date.now(),
                 episode: episode + 1,
-                file_type: "film",
+                file_type: FileType.FILM,
               });
             }
           });
