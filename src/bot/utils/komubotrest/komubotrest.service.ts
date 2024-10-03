@@ -34,6 +34,8 @@ import { Uploadfile } from "src/bot/models/uploadFile.entity";
 import { ReportDailyDTO } from "./komubotrest.dto";
 import { join } from "path";
 import moment from "moment";
+import * as fs from "fs";
+import * as path from "path";
 
 @Injectable()
 export class KomubotrestService {
@@ -55,6 +57,9 @@ export class KomubotrestService {
     private clientConfig: ClientConfigService
   ) {}
   private data;
+  private folderPath = join(__dirname, "../../../..", "uploads/");
+  private watcher: fs.FSWatcher;
+
   async findUserData(_pramams) {
     return await this.userRepository
       .createQueryBuilder()
@@ -1127,15 +1132,56 @@ export class KomubotrestService {
     console.log("migrateUserType done!");
   }
 
-  async getNcc8Episode(episode: string) {
+  async getNcc8Episode(episode: string, file_type: string) {
     const file = await this.uploadFileData
       .createQueryBuilder()
       .where('"episode" = :episode', { episode })
+      .andWhere('"file_type" = :file_type', { file_type })
       .orderBy('"createTimestamp"', "DESC")
       .limit(1)
       .select("*")
       .execute();
-    
+
     return file;
+  }
+
+  async findMaxEpisode(): Promise<number> {
+    const result = await this.uploadFileData
+      .createQueryBuilder("upload_file")
+      .select("MAX(upload_file.episode)", "maxEpisode")
+      .getRawOne();
+    return result?.maxEpisode || 0;
+  }
+
+  startWatchingFolder() {
+    this.watcher = fs.watch(this.folderPath, (eventType, filename) => {
+      if (filename) {
+        if (eventType === "rename") {
+          console.log(`Event type: ${eventType}`);
+          const filePath = path.join(this.folderPath, filename);
+          fs.stat(filePath, async (err, stats) => {
+            if (err) {
+              console.log(`${filename} was deleted.`);
+              await this.uploadFileData.delete({
+                fileName: `${filename}`,
+              });
+            } else if (stats.isFile()) {
+              console.log("New film inserted: ", filename);
+              const isNewFilm = filename.startsWith("film_");
+              if (!isNewFilm) return;
+              const episode = await this.findMaxEpisode(); // find current episode
+              await this.uploadFileData.insert({
+                filePath: this.folderPath,
+                fileName: `${filename}`,
+                createTimestamp: Date.now(),
+                episode: episode + 1,
+                file_type: "film",
+              });
+            }
+          });
+        }
+      }
+    });
+    console.log(`Started watching folder: ${this.folderPath}`);
   }
 }

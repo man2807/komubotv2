@@ -258,6 +258,7 @@ export class KomubotrestController {
       fileName: `${file.filename}`,
       createTimestamp: Date.now(),
       episode,
+      file_type: "ncc8"
     });
     try {
       const oauth2Client = new google.auth.OAuth2(
@@ -380,7 +381,7 @@ export class KomubotrestController {
     @Res() res: Response
   ) {
     try {
-      const file = await this.komubotrestService.getNcc8Episode(episode);
+      const file = await this.komubotrestService.getNcc8Episode(episode,'ncc8');
       if (!file?.length) {
         res.status(404).send({ message: 'Not found' });
         return;
@@ -397,6 +398,27 @@ export class KomubotrestController {
       //   "Content-Disposition": `attachment; filename=${file[0].fileName}`,
       // });
       // return new StreamableFile(mp3);
+    } catch (error) {
+      console.error('getNcc8Episode error', error);
+      res.status(500).send({ message: 'Server error' });
+    }
+  }
+
+  @Get("/ncc8/film/:episode")
+  async getNcc8Film(
+    @Param('episode') episode: string,
+    @Res() res: Response
+  ) {
+    try {
+      const file = await this.komubotrestService.getNcc8Episode(episode,'film');
+      if (!file?.length) {
+        res.status(404).send({ message: 'Not found' });
+        return;
+      }
+
+      const nccPath = join(__dirname, "../../../..", "uploads/");
+
+      res.status(200).json({ url: join(nccPath + file[0].fileName) })
     } catch (error) {
       console.error('getNcc8Episode error', error);
       res.status(500).send({ message: 'Server error' });

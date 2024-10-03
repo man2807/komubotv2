@@ -18,4 +18,7 @@ export class Uploadfile {
 
   @Column({ nullable: true })
   episode: number;
+
+  @Column({ type: "varchar", nullable: true })
+  file_type: string;
 }
