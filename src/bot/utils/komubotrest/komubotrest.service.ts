@@ -566,9 +566,11 @@ export class KomubotrestService {
       console.log("User not found in DB!", sendMessageToChannelDTO.username);
       // sendMessageToChannelDTO.message += `<@${this.clientConfig.komubotrestAdminId}> ơi, đồng chí ${sendMessageToChannelDTO.username} không đúng format rồi!!!`;
       userid = sendMessageToChannelDTO.username as any;
-      res.status(400).send({
-        message: `User ${sendMessageToChannelDTO.username} not found in DB!`,
-      });
+      res
+        .status(400)
+        .send({
+          message: `User ${sendMessageToChannelDTO.username} not found in DB!`,
+        });
       return;
     } else {
       sendMessageToChannelDTO.machleo_userid = userdb.userId;
