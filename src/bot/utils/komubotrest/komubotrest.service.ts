@@ -57,7 +57,7 @@ export class KomubotrestService {
     private clientConfig: ClientConfigService
   ) {}
   private data;
-  private folderPath = join(__dirname, "/home/nccsoft/projects/uploads/");
+  private folderPath = join(__dirname, "../../../../../..", "projects/uploads/");
   private watcher: fs.FSWatcher;
 
   async findUserData(_pramams) {
