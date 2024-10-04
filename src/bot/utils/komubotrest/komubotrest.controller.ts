@@ -388,7 +388,7 @@ export class KomubotrestController {
         return;
       }
 
-      const nccPath = join(__dirname, "../../../../../..", "projects/uploads/");
+      const nccPath = join(__dirname, "../../../..", "uploads/");
 
       res.status(200).json({ url: join(nccPath + file[0].fileName) })
   
@@ -417,7 +417,7 @@ export class KomubotrestController {
         return;
       }
 
-      const nccPath = join(__dirname, "/home/nccsoft/projects/uploads/");
+      const nccPath = join(__dirname, "../../../../../..", "projects/uploads/");
 
       res.status(200).json({ url: join(nccPath + file[0].fileName) })
     } catch (error) {
